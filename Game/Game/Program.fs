@@ -1,30 +1,26 @@
-﻿// For more information see https://aka.ms/fsharp-console-apps
-printfn "Hello from F#"
+﻿open GameTypes
+open InputHandlers
+open OutputHandlers
 
-type Entity = {
-    id: int
-}
 
-type GameState = {
-    Entities: Entity list
-}
-
-//TODO: async wait for user library to set input
-let takeInput (state: GameState) =
-    state
 //TODO: one step of game simulation
 let updateState (state: GameState) =
     state
 //TODO: determine if game is over
 let concluded (state: GameState) =
-    false
+    false    
 
-//game loop is sequence of states
-let gameLoop (initialState: GameState) takeInput =
-    seq {
+let playGame (initialState: GameState) takeInput handleOutput =
+    async {
         let mutable state = initialState
         while concluded state |> not do
-            state <- takeInput state
-                        <| updateState
-            yield state
+            let! stateAfterInput = takeInput state |> Async.AwaitTask
+            state <- updateState stateAfterInput
+            handleOutput state
+        return state
     }
+
+//Run the game 
+let finalState = 
+    playGame {Entities=[]} libraryInputHandler libraryOutputHandler 
+    |> Async.RunSynchronously
