@@ -1,7 +1,10 @@
 ﻿module GameTypes
 
+open System.Numerics
+
 type Entity = {
     id: int
+    pos: Vector2
 }
 
 type GameState = {
