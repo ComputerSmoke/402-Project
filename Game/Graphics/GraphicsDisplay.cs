@@ -5,12 +5,15 @@ using System.Collections.Generic;
 
 namespace Graphics
 {
+    //Game display
     public class GraphicsDisplay : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private List<DisplayEntity> _entities;
         private Texture2D _pixelTexture;
+        //used to optimize redraws to only when state has changed.
+        private bool _updateDisplay = true;
         public GraphicsDisplay()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -44,25 +47,33 @@ namespace Graphics
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            //Acquire lock because draw loop is on different thread from entity updater.
-            lock (_entities)
+            //If state has changed since last draw, redraw everything
+            if(_updateDisplay)
             {
-                //drawing code here
-                _spriteBatch.Begin();
-                foreach (DisplayEntity entity in _entities)
+                GraphicsDevice.Clear(Color.CornflowerBlue);
+                //Acquire lock because draw loop is on different thread from entity updater.
+                lock (_entities)
                 {
-                    _spriteBatch.Draw(_pixelTexture, entity.Position, null, entity.Color, 0, Vector2.Zero, entity.Size, SpriteEffects.None, 0);
+                    //drawing code here
+                    _spriteBatch.Begin();
+                    foreach (DisplayEntity entity in _entities)
+                    {
+                        _spriteBatch.Draw(_pixelTexture, entity.Position, null, entity.Color, 0, Vector2.Zero, entity.Size, SpriteEffects.None, 0);
+                    }
+                    _spriteBatch.End();
+                    _updateDisplay = false;
                 }
-                _spriteBatch.End();
             }
             base.Draw(gameTime);
         }
+        //Update entity display
         public void SetEntities(IEnumerable<DisplayEntity> entities)
         {
+            //Acquire lock to avoid conflict with Draw
             lock(_entities)
             {
                 _entities = new(entities);
+                _updateDisplay = true;
             }
         }
     }

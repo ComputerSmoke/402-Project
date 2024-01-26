@@ -3,7 +3,7 @@
 open GameTypes
 open Graphics
     
-//Output handler for graphics
+//Get an output handler for graphics, creating display window
 let graphicsOutput () =
     let game = new Graphics.GraphicsDisplay();
     //run game graphics in seperate thread

@@ -8,12 +8,13 @@ using System.Numerics;
 
 namespace Graphics
 {
-    public class Entity
+    //Stores information necessary to draw an entity
+    public class DisplayEntity
     {
         public float Size { get; }
         public Color Color { get; }
         public Microsoft.Xna.Framework.Vector2 Position { get; }
-        public Entity(float size, int color, System.Numerics.Vector2 pos)
+        public DisplayEntity(float size, int color, System.Numerics.Vector2 pos)
         {
             Size = size;
             Color = new(new Microsoft.Xna.Framework.Vector3(color, 1-color, 0));
