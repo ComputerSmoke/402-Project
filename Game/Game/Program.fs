@@ -4,23 +4,21 @@ open OutputHandlers
 
 
 //TODO: one step of game simulation
-let updateState (state: GameState) =
+let updateState (actions: (Entity * Action) list) (state: GameState) =
     state
 //TODO: determine if game is over
 let concluded (state: GameState) =
     false    
 
-let playGame (initialState: GameState) takeInput handleOutput =
-    async {
-        let mutable state = initialState
-        while concluded state |> not do
-            let! stateAfterInput = takeInput state |> Async.AwaitTask
-            state <- updateState stateAfterInput
-            handleOutput state
-        return state
-    }
+let newGame (initialState: GameState) outputHandler =
+    let mutable state = initialState
+    let inputCallback (actions: (Entity * Action) list) =
+        state <- updateState actions state
+        outputHandler state
+        state
+    inputCallback
 
-//Run the game 
-let finalState = 
-    playGame {Entities=[]} libraryInputHandler libraryOutputHandler 
-    |> Async.RunSynchronously
+let gameUpdater = newGame {Entities=[]} graphicsOutput
+//code using game as library would call this
+let takeTurn (actions: (Entity * Action) list) =
+    gameUpdater actions
