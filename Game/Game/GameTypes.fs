@@ -5,7 +5,7 @@ open System.Numerics
 type Entity = {
     Pos: Vector2
 } 
-type GameState = {
+type GameState = internal {
     Step: int
     Entities: Entity list
 }
