@@ -1,24 +1,34 @@
 ﻿open GameTypes
-open InputHandlers
-open OutputHandlers
+open System.Numerics
 
+let [<Literal>] MoveSpeed  = 0.1f
+let [<Literal>] ScreenSize = 100f
 
-//TODO: one step of game simulation
-let updateState (actions: (Entity * Action) list) (state: GameState) =
-    state
-//TODO: determine if game is over
-let concluded (state: GameState) =
-    false    
+let move (entity : Entity) (dir : Direction) =
+    let step = 
+        (MoveSpeed * 
+        match dir with 
+        | Up -> -Vector2.UnitY
+        | Down -> Vector2.UnitY
+        | Left -> -Vector2.UnitX
+        | Right -> Vector2.UnitX
+        )
+    {entity with Pos = Vector2.Clamp ( entity.Pos + step, Vector2.Zero, Vector2(ScreenSize)) }
 
-let newGame (initialState: GameState) outputHandler =
-    let mutable state = initialState
-    let inputCallback (actions: (Entity * Action) list) =
-        state <- updateState actions state
-        outputHandler state
-        state
-    inputCallback
+let applyAction (entity : Entity) (action : Action) = 
+    match action with
+    | Move(dir) -> move entity dir
 
-let gameUpdater = newGame {Entities=[]} graphicsOutput
-//code using game as library would call this
-let takeTurn (actions: (Entity * Action) list) =
-    gameUpdater actions
+let updateState (state: GameState) (actions: Action List) =
+    let newEntities = List.map2 applyAction state.Entities actions
+    let newStep = state.Step + 1
+    {Entities = newEntities; Step = newStep}
+
+let newGame =
+    {Entities = [{Pos = Vector2.Zero}]; Step = 0}
+
+let mutable game = newGame
+
+for i in [0..1000] do
+    game <- updateState game [Move(Down)]
+    printfn $"{game.Entities.Head.Pos}"

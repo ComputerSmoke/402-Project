@@ -7,8 +7,6 @@
 
   <ItemGroup>
     <Compile Include="GameTypes.fs" />
-    <Compile Include="OutputHandlers.fs" />
-    <Compile Include="InputHandlers.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
