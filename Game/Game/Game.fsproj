@@ -6,8 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="GameTypes.fs" />
+    <Compile Include="InputOutput.fs" />
+    <Compile Include="GameLogic.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GameTypes\GameTypes.fsproj" />
+    <ProjectReference Include="..\Graphics\Graphics.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
+using GameTypes;
 
 namespace Graphics
 {
@@ -10,12 +12,15 @@ namespace Graphics
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private List<DisplayEntity> _entities;
+        public List<Entity> Entities { get; private set; }
         private Texture2D _pixelTexture;
         //used to optimize redraws to only when state has changed.
         private bool _updateDisplay = true;
-        public GraphicsDisplay()
+        readonly Func<int, GameAction, GameState> _inputHandler;
+        EntitySelector Selector { get; set }
+        public GraphicsDisplay(Func<int, GameAction, GameState> inputHandler)
         {
+            _inputHandler = inputHandler;
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -25,6 +30,8 @@ namespace Graphics
         {
             // TODO: Add your initialization logic here
             _spriteBatch = new(GraphicsDevice);
+            Selector = new EntitySelector(this);
+            Components.Add(Selector);
             base.Initialize();
         }
 
@@ -40,7 +47,9 @@ namespace Graphics
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // No update logic for our graphics display, that's handled in Game project.
+            var input = Keyboard.GetState();
+            if(input.IsKeyDown(Keys.W))
+                
 
             base.Update(gameTime);
         }
@@ -52,13 +61,14 @@ namespace Graphics
             {
                 GraphicsDevice.Clear(Color.CornflowerBlue);
                 //Acquire lock because draw loop is on different thread from entity updater.
-                lock (_entities)
+                lock (Entities)
                 {
                     //drawing code here
                     _spriteBatch.Begin();
-                    foreach (DisplayEntity entity in _entities)
+                    foreach (Entity entity in Entities)
                     {
-                        _spriteBatch.Draw(_pixelTexture, entity.Position, null, entity.Color, 0, Vector2.Zero, entity.Size, SpriteEffects.None, 0);
+                        var (r, g, b) = entity.Color;
+                        _spriteBatch.Draw(_pixelTexture, entity.Pos, null, new Color(r, g, b), 0, Vector2.Zero, Vector2.One * 50, SpriteEffects.None, 0);
                     }
                     _spriteBatch.End();
                     _updateDisplay = false;
@@ -67,12 +77,12 @@ namespace Graphics
             base.Draw(gameTime);
         }
         //Update entity display
-        public void SetEntities(IEnumerable<DisplayEntity> entities)
+        public void SetEntities(IEnumerable<Entity> entities)
         {
             //Acquire lock to avoid conflict with Draw
-            lock(_entities)
+            lock(Entities)
             {
-                _entities = new(entities);
+                Entities = new(entities);
                 _updateDisplay = true;
             }
         }
