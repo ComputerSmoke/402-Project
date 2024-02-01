@@ -12,12 +12,11 @@ namespace Graphics
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        public List<Entity> Entities { get; private set; }
         private Texture2D _pixelTexture;
         //used to optimize redraws to only when state has changed.
         private bool _updateDisplay = true;
         readonly Func<int, GameAction, GameState> _inputHandler;
-        EntitySelector Selector { get; set }
+        EntitySelector EntitySelector { get; set; }
         public GraphicsDisplay(Func<int, GameAction, GameState> inputHandler)
         {
             _inputHandler = inputHandler;
@@ -30,8 +29,8 @@ namespace Graphics
         {
             // TODO: Add your initialization logic here
             _spriteBatch = new(GraphicsDevice);
-            Selector = new EntitySelector(this);
-            Components.Add(Selector);
+            EntitySelector = new EntitySelector(this);
+            Components.Add(EntitySelector);
             base.Initialize();
         }
 
@@ -46,9 +45,12 @@ namespace Graphics
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            if(EntitySelector.Entities.Count == 0)
+                return;
 
             var input = Keyboard.GetState();
-            if(input.IsKeyDown(Keys.W))
+            if (input.IsKeyDown(Keys.W))
+                _inputHandler(EntitySelector.SelectedId, );
                 
 
             base.Update(gameTime);
@@ -61,11 +63,11 @@ namespace Graphics
             {
                 GraphicsDevice.Clear(Color.CornflowerBlue);
                 //Acquire lock because draw loop is on different thread from entity updater.
-                lock (Entities)
+                lock (EntitySelector.Entities)
                 {
                     //drawing code here
                     _spriteBatch.Begin();
-                    foreach (Entity entity in Entities)
+                    foreach (Entity entity in EntitySelector.Entities)
                     {
                         var (r, g, b) = entity.Color;
                         _spriteBatch.Draw(_pixelTexture, entity.Pos, null, new Color(r, g, b), 0, Vector2.Zero, Vector2.One * 50, SpriteEffects.None, 0);
@@ -80,9 +82,9 @@ namespace Graphics
         public void SetEntities(IEnumerable<Entity> entities)
         {
             //Acquire lock to avoid conflict with Draw
-            lock(Entities)
+            lock(EntitySelector.Entities)
             {
-                Entities = new(entities);
+                EntitySelector.Entities = new(entities);
                 _updateDisplay = true;
             }
         }
