@@ -1,11 +1,11 @@
 ﻿namespace GameTypes
 
-open System.Numerics
+open Microsoft.Xna.Framework
 
 type Entity = {
-    id: int
+    Id: int
     Pos: Vector2
-    Color: int * int * int
+    Color: Color
 } 
 type GameState = {
     Step: int
@@ -13,6 +13,7 @@ type GameState = {
 }
 
 type GameAction = 
+    | Idle
     | Move of Vector2
     
 type ActionBinding = int * GameAction
