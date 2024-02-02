@@ -6,14 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="InputOutput.fs" />
+    <Compile Include="GameTypes.fs" />
     <Compile Include="GameLogic.fs" />
+    <Compile Include="InputOutput.fs" />
+    <Compile Include="GraphicsDisplay\GraphicsGame.fs" />
+    <Compile Include="GraphicsDisplay\EntitySelector.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GameTypes\GameTypes.fsproj" />
-    <ProjectReference Include="..\Graphics\Graphics.csproj" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
   </ItemGroup>
 
 </Project>
