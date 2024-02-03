@@ -2,10 +2,20 @@
 
 open Microsoft.Xna.Framework
 
+type Direction =
+    Up
+    | Down
+    | Left
+    | Right
+
+type Texture = 
+    Hero
+    | Wall
+
 type Entity = {
     Id: int
-    Pos: Vector2
-    Color: Color
+    Position: Vector2
+    Texture: Texture
 } 
 type GameState = {
     Step: int
@@ -14,6 +24,6 @@ type GameState = {
 
 type GameAction = 
     | Idle
-    | Move of Vector2
+    | Move of Direction
     
 type ActionBinding = int * GameAction

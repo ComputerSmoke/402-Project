@@ -7,7 +7,7 @@ open Microsoft.Xna.Framework
 
 //We will construct a game state for each level
 let newGame =
-    {Entities = [{Pos = Vector2.Zero; Id = 0; Color = new Color(255, 0, 0)}]; Step = 0}
+    {Entities = [{Position = Vector2.Zero; Id = 0; Texture = Hero}]; Step = 0}
 let mutable game = newGame
 
 let input (actions:ActionBinding list) =
