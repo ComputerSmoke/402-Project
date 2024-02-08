@@ -1,11 +1,12 @@
 ﻿module Draw
 
 open GameTypes
+open State
 open Microsoft.Xna.Framework.Graphics
 open Microsoft.Xna.Framework.Content
 open Microsoft.Xna.Framework
 open GameLogic
-
+open System
 let textureNames =
     Map [Hero, "hero"; Wall, "wall"]
    
@@ -20,20 +21,22 @@ let getTexture (content:ContentManager) texture =
         textures <- Map.add texture texture2D textures
         texture2D
 
-let draw (entities : Entity list) (content: ContentManager) (spriteBatch: SpriteBatch) =
+let [<Literal>] CanvasSize = 500
+let draw (content: ContentManager) (spriteBatch: SpriteBatch) =
         spriteBatch.Begin()
         List.iter (fun entity ->
             let texture = getTexture content entity.Texture
+            let x = entity.Position.X * CanvasSize / ScreenSize
+            let y = entity.Position.Y * CanvasSize / ScreenSize
             spriteBatch.Draw(
                 texture,
-                Vector2((float32 entity.Position.X) / (float32 ScreenSize), (float32 entity.Position.Y) / (float32 ScreenSize)),
-                new Rectangle(Point.Zero, new Point(texture.Width, texture.Height)),
+                new Rectangle(new Point(x-25, y-25), new Point(50, 50)),
+                Nullable(),
                 Color.White,
                 0f,
                 Vector2.Zero,
-                Vector2.One * 4f,
                 SpriteEffects.None,
                 0f
             )
-        ) entities
+        ) game.Entities
         spriteBatch.End()

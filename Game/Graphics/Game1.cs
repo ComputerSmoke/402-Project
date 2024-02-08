@@ -23,7 +23,13 @@ namespace Graphics
 
         public Game1(Action takeInput, Action<ContentManager, SpriteBatch> draw)
         {
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                IsFullScreen = false,
+                PreferredBackBufferWidth = 500,
+                PreferredBackBufferHeight = 500,
+            };
+            _graphics.ApplyChanges();
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             _takeInput = takeInput;

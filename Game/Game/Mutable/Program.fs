@@ -1,4 +1,5 @@
 ﻿open GameTypes
+open State
 open GameLogic
 open Microsoft.Xna.Framework.Input
 open Graphics
@@ -7,17 +8,9 @@ open Draw
 open InputOutput
 open System
 
-//We will construct a game state for each level
-let newGame =
-    {Entities = [{Position = {X = 0; Y = 0}; Id = 0; Texture = Hero}]; Step = 0}
-let mutable game = newGame
-let mutable selectedIdx = 0
-let mutable rightDown = false
-let mutable leftDown = false
-
-let updateEntitySelection (state:KeyboardState) (numEntities : int) =
+let updateEntitySelection (state:KeyboardState) =
     let IncrementSelected() =
-        selectedIdx <- (selectedIdx + 1) % numEntities
+        selectedIdx <- (selectedIdx + 1) % game.Entities.Length
     let DeincrementSelected() =
         selectedIdx <- Math.Max(selectedIdx - 1, 0)
 
@@ -27,18 +20,16 @@ let updateEntitySelection (state:KeyboardState) (numEntities : int) =
     rightDown <- state.IsKeyDown Keys.Right
     leftDown <- state.IsKeyDown Keys.Left
 
-
-//Read keyboard and update selection based on it. Then control selected entity
-let takeInput() =
+let takeInput () =
     let state = Keyboard.GetState()
-    updateEntitySelection state game.Entities.Length
+    updateEntitySelection state
     let action: GameAction = findAction state
     game <- 
         [(selectedIdx, action)]
         |> (actionBindingsToActionList game.Entities)
         |> updateState game
 
-let graphics = new Game1(takeInput, draw game.Entities)
+let game1 = new Game1(takeInput, draw )
 //TODO: also get a thread going with our web server
-graphics.Run()
+game1.Run()
 
