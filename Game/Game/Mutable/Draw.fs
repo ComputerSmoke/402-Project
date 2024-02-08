@@ -12,7 +12,7 @@ let textureNames =
    
 //Load each texture once when first demanded
 let mutable textures: Map<GameTypes.Texture, Texture2D> = Map []
-let getTexture (content:ContentManager) texture =
+let getTexture (content: ContentManager) texture =
     match Map.tryFind texture textures with
     | Some t -> t
     | None ->
@@ -28,9 +28,10 @@ let draw (content: ContentManager) (spriteBatch: SpriteBatch) =
             let texture = getTexture content entity.Texture
             let x = entity.Position.X * CanvasSize / ScreenSize
             let y = entity.Position.Y * CanvasSize / ScreenSize
+            let spriteSize = EntitySize * CanvasSize / ScreenSize
             spriteBatch.Draw(
                 texture,
-                new Rectangle(new Point(x-25, y-25), new Point(50, 50)),
+                Rectangle(Point(x - spriteSize / 2, y - spriteSize / 2), Point(spriteSize, spriteSize)),
                 Nullable(),
                 Color.White,
                 0f,

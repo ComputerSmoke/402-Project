@@ -6,7 +6,6 @@
   <ItemGroup>
     <Compile Include="GameTypes.fs" />
     <Compile Include="GameLogic.fs" />
-    <Compile Include="InputOutput.fs" />
     <Compile Include="Input.fs" />
     <Compile Include="Mutable\State.fs" />
     <Compile Include="Mutable\Draw.fs" />

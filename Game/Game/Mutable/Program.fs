@@ -5,7 +5,6 @@ open Microsoft.Xna.Framework.Input
 open Graphics
 open Input
 open Draw
-open InputOutput
 open System
 
 let updateEntitySelection (state:KeyboardState) =

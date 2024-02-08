@@ -1,21 +1,19 @@
 ﻿namespace GameTypes
 
-open Microsoft.Xna.Framework
-
 type Direction =
     | Up
     | Down
     | Left
     | Right
 
-type Texture = 
-    | Hero
-    | Wall
-
 type Pos = {
     X: int
     Y: int
 }
+
+type Texture = 
+    | Hero
+    | Wall
 
 type Entity = {
     Id: int
