@@ -1,20 +1,22 @@
 ﻿module GameLogic
 
 open GameTypes
-open Microsoft.Xna.Framework
+open System
 
-let [<Literal>] MoveSpeed  = 0.1f
-let [<Literal>] ScreenSize = 100f
+let [<Literal>] MoveSpeed  = 1
+let [<Literal>] ScreenSize = 100
 
 let move (entity : Entity) (dir : Direction) =
-    let dirVec = 
+    let pos = entity.Position
+    let step = 
         match dir with
-        | Up -> -Vector2.UnitY
-        | Down -> Vector2.UnitY
-        | Left -> -Vector2.UnitX
-        | Right -> Vector2.UnitX
-    let step = MoveSpeed * dirVec
-    {entity with Position = Vector2.Clamp ( entity.Position + step, Vector2.Zero, Vector2(ScreenSize)) }
+        | Up -> {X = 0; Y = -MoveSpeed}
+        | Down -> {X = 0; Y = MoveSpeed}
+        | Left -> {X = -MoveSpeed; Y = 0}
+        | Right -> {X = MoveSpeed; Y = 0}
+    let newX = Math.Clamp(pos.X + step.X, 0, ScreenSize)
+    let newY = Math.Clamp(pos.Y + step.Y, 0, ScreenSize)
+    {entity with Position = {X = newX; Y = newY}}
 
 let applyAction (entity : Entity) (action : GameAction) = 
     match action with

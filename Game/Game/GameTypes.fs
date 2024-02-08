@@ -3,22 +3,29 @@
 open Microsoft.Xna.Framework
 
 type Direction =
-    Up
+    | Up
     | Down
     | Left
     | Right
 
 type Texture = 
-    Hero
+    | Hero
     | Wall
+
+type Pos = {
+    X: int
+    Y: int
+}
 
 type Entity = {
     Id: int
-    Position: Vector2
+    Position: Pos
     Texture: Texture
 } 
+
 type GameState = {
     Step: int
+    //This should never be empty
     Entities: Entity list
 }
 

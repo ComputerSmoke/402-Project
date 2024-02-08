@@ -1,21 +1,15 @@
 ﻿module InputOutput
 
 open GameTypes
-open GameLogic
 
-open Microsoft.Xna.Framework
-
-//We will construct a game state for each level
-let newGame =
-    {Entities = [{Position = Vector2.Zero; Id = 0; Texture = Hero}]; Step = 0}
-let mutable game = newGame
-
-let input (actions:ActionBinding list) =
-    let actionByEntity = 
-        List.map (fun entity ->
-            match List.tryFind (fun (id, _) -> entity.Id = id) actions with
-            | None -> Idle
-            | Some (_, action) -> action
-        ) game.Entities
-    game <- updateState game actionByEntity
-    game
+//This prevents a crash if the wrong length of action list is input
+//I am not sure if that is a good thing or not
+//Just making it crash may make debugging issues with incorrect IDs easier on the player
+//We could get rid of IDs and force the player to provide a list of the correct length
+//Not sure what is best
+let actionBindingsToActionList (entities : Entity list) (actions: ActionBinding list) =
+    List.map (fun entity ->
+        match List.tryFind (fun (id, _) -> entity.Id = id) actions with
+        | None -> Idle
+        | Some (_, action: GameAction) -> action
+    ) entities
