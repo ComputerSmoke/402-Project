@@ -11,14 +11,14 @@ type Pos = {
     Y: int
 }
 
-type Texture = 
+type EntityType = 
     | Hero
     | Wall
 
 type Entity = {
     Id: int
     Position: Pos
-    Texture: Texture
+    Type: EntityType
 } 
 
 type GameState = {

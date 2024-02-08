@@ -4,12 +4,12 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GameTypes.fs" />
-    <Compile Include="GameLogic.fs" />
-    <Compile Include="Input.fs" />
-    <Compile Include="Mutable\State.fs" />
-    <Compile Include="Mutable\Draw.fs" />
-    <Compile Include="Mutable\Program.fs" />
+    <Compile Include="GameLogic\GameTypes.fs" />
+    <Compile Include="GameLogic\GameLogic.fs" />
+    <Compile Include="Monogame\State.fs" />
+    <Compile Include="Monogame\Draw.fs" />
+    <Compile Include="Monogame\Input.fs" />
+    <Compile Include="Monogame\Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Extended" Version="3.8.0" />

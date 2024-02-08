@@ -11,7 +11,7 @@ let textureNames =
     Map [Hero, "hero"; Wall, "wall"]
    
 //Load each texture once when first demanded
-let mutable textures: Map<GameTypes.Texture, Texture2D> = Map []
+let mutable textures: Map<GameTypes.EntityType, Texture2D> = Map []
 let getTexture (content: ContentManager) texture =
     match Map.tryFind texture textures with
     | Some t -> t
@@ -25,7 +25,7 @@ let [<Literal>] CanvasSize = 500
 let draw (content: ContentManager) (spriteBatch: SpriteBatch) =
         spriteBatch.Begin()
         List.iter (fun entity ->
-            let texture = getTexture content entity.Texture
+            let texture = getTexture content entity.Type
             let x = entity.Position.X * CanvasSize / ScreenSize
             let y = entity.Position.Y * CanvasSize / ScreenSize
             let spriteSize = EntitySize * CanvasSize / ScreenSize
